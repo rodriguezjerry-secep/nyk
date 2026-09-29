@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Now You Know · Norfolk Knights</title>
+<meta name="theme-color" content="#0C1F5C">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Now You Know">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,800&display=swap">
+<style>
+  :root{--navy:#081640;--brand:#0C1F5C;--blue:#1D46C9;--sun:#F6C744;--ink:#fff;--muted:#C7D0EA}
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%;background:var(--navy);color:var(--ink);font-family:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif}
+  body{padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+  .banner{display:block;width:100%;aspect-ratio:1000/229;object-fit:cover;object-position:50% 40%}
+  @media (max-width:560px){.banner{aspect-ratio:1.9/1}}
+  .motto{margin:0;padding:10px 16px;text-align:center;background:linear-gradient(90deg,var(--navy),var(--blue) 50%,var(--navy));font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:clamp(14px,3.6vw,18px)}
+  main{max-width:520px;margin:0 auto;padding:28px 16px 40px;display:flex;flex-direction:column;gap:18px;text-align:center}
+  h1{margin:0;font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:32px;letter-spacing:-.01em}
+  p{margin:0;color:var(--muted);font-size:17px;line-height:1.5}
+  .go{display:block;background:var(--sun);color:#1B1A10;text-decoration:none;font-weight:700;font-size:20px;padding:16px 20px;border-radius:14px}
+  .go:focus-visible,.btn:focus-visible{outline:3px solid #fff;outline-offset:3px}
+  .card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:16px;text-align:left}
+  .card h2{margin:0 0 8px;font-size:17px}
+  .card ol{margin:0;padding-left:20px;color:var(--muted);line-height:1.6}
+  .btn{border:1.5px solid #fff;background:transparent;color:#fff;border-radius:12px;padding:12px 16px;font:inherit;font-weight:700;cursor:pointer;width:100%}
+  .note{font-size:14px}
+  [hidden]{display:none!important}
+</style>
+</head>
+<body>
+<img class="banner" src="banner.jpg" alt="Norfolk Knights logo">
+<p class="motto">Every Knight has the power to choose greatness</p>
+<main>
+  <h1>Now You Know</h1>
+  <p id="lead">Today’s staffing, announcements and lunch for Norfolk Re-ED / TRAEP.</p>
+  <a class="go" id="go" href="#">Open today’s update</a>
+  <p class="note" id="opening" hidden>Opening&hellip;</p>
+
+  <button class="btn" id="install" type="button" hidden>Install the app on this device</button>
+
+  <section class="card" id="ios" hidden>
+    <h2>Add the app to your iPhone or iPad</h2>
+    <ol>
+      <li>Open this page in <b>Safari</b>.</li>
+      <li>Tap the <b>Share</b> button (square with an arrow).</li>
+      <li>Tap <b>Add to Home Screen</b>, then <b>Add</b>.</li>
+    </ol>
+  </section>
+  <section class="card" id="android" hidden>
+    <h2>Add the app to your phone</h2>
+    <ol>
+      <li>Tap the <b>&#8942;</b> menu in Chrome.</li>
+      <li>Tap <b>Install app</b> or <b>Add to Home screen</b>.</li>
+    </ol>
+  </section>
+
+  <p class="note">Sign in with your <b>secep.net</b> Google account the first time.</p>
+</main>
+<script>
+  // ======= The staff page this app opens =======
+  var STAFF_URL = 'https://script.google.com/a/macros/secep.net/s/AKfycbzdlX5IlUUUFZSvF6TEvnrvmPAaMSDQbh7-eZSpa-nLFdEoCD4Efs9kt1rFtHvFZsiv/exec';
+  // =============================================
+  var go = document.getElementById('go');
+  go.href = STAFF_URL;
+
+  var standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  var ua = navigator.userAgent;
+  var isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+  if (standalone) {
+    // Opened from the home-screen icon: go straight to the update (once per launch).
+    document.getElementById('lead').textContent = 'Tap below if the update doesn’t open by itself.';
+    var launched = false;
+    try { launched = sessionStorage.getItem('nyk-launched') === '1'; sessionStorage.setItem('nyk-launched', '1'); } catch (e) {}
+    if (!launched) { document.getElementById('opening').hidden = false; setTimeout(function(){ location.href = STAFF_URL; }, 250); }
+  } else {
+    // Opened in a browser: show how to install.
+    var deferred = null, installBtn = document.getElementById('install');
+    window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred = e; installBtn.hidden = false; document.getElementById('android').hidden = true; });
+    installBtn.addEventListener('click', function () { if (!deferred) return; deferred.prompt(); deferred.userChoice.finally(function(){ deferred = null; installBtn.hidden = true; }); });
+    if (isIOS) document.getElementById('ios').hidden = false;
+    else if (/Android/.test(ua)) document.getElementById('android').hidden = false;
+  }
+
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function(){});
+</script>
+</body>
+</html>
