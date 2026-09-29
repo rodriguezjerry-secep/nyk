@@ -1,0 +1,15 @@
+{
+  "name": "Now You Know · Post",
+  "short_name": "NYK Post",
+  "description": "Post daily updates to the Norfolk Knights Now You Know staff page.",
+  "id": "./",
+  "start_url": "./?source=app",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#081640",
+  "theme_color": "#0C1F5C",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
