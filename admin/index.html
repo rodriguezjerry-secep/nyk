@@ -70,9 +70,9 @@
 </main>
 <script>
   // ============ LINKS (edit these three) ============
-  var FORM_URL  = 'PASTE_FORM_LINK_HERE';   // Google Form link ending in /viewform
+  var FORM_URL  = 'https://forms.gle/njUZX44BZZrgK7256';
   var STAFF_URL = 'https://script.google.com/a/macros/secep.net/s/AKfycbzdlX5IlUUUFZSvF6TEvnrvmPAaMSDQbh7-eZSpa-nLFdEoCD4Efs9kt1rFtHvFZsiv/exec';
-  var SHEET_URL = 'PASTE_SHEET_LINK_HERE';  // "Now You Know Data" Google Sheet link
+  var SHEET_URL = 'https://docs.google.com/spreadsheets/d/16CZ8WweSZHjzqae8Coe-R8Ni5vP6DKp6a2k3CgL7Bok/edit';
   // ==================================================
   function set(id, url){ var a=document.getElementById(id); if(!url || url.indexOf('PASTE_')===0){ a.classList.add('missing'); a.removeAttribute('href'); } else { a.href=url; } }
   set('post', FORM_URL); set('view', STAFF_URL); set('fix', SHEET_URL);
